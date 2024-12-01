@@ -111,6 +111,7 @@ class InstansiResource extends Resource
                                 Forms\Components\TextInput::make('telepon')
                                     ->label('Nomor Telepon')
                                     ->placeholder('+628***********')
+                                    ->startsWith(['+628'])
                                     ->minLength(10)
                                     ->maxLength(15)
                                     ->tel()
