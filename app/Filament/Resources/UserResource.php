@@ -20,12 +20,12 @@ class UserResource extends Resource
     protected static ?string $label = 'Pengguna';
     protected static ?string $slug = 'pengguna';
     protected static ?int $sort = 2;
-    protected static ?string $navigationBadgeTooltip = 'Jumlah Pengguna';
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah Pengguna';
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count() . ' Akun';
+        return static::getModel()::count() . ' Pengguna';
     }
 
     public static function form(Form $form): Form
