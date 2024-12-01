@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('nik')->unique();
             $table->string('nisn')->nullable()->unique();
             $table->unsignedInteger('nis')->nullable()->unique();
-            $table->string('agama')->enum('Islam', 'Kristen Katholik', 'Kristen Protestan', 'Hindu', 'Buddha', 'Konghucu')->default('Islam');
+            $table->string('agama')->enum('Islam', 'Kristen Katholik', 'Kristen Protestan', 'Hindu', 'Buddha', 'Konghucu');
             $table->string('jenis_kelamin')->enum('Laki-laki', 'Perempuan');
             $table->string('golongan_darah')->enum('A+', 'B+', 'AB+', 'O', 'A-', 'B-', 'AB-', 'O');
             $table->foreignId('tempat_lahir')->constrained('kabupatens')->cascadeOnUpdate()->cascadeOnDelete();
@@ -51,7 +51,7 @@ return new class extends Migration
             $table->string('nama_bank')->nullable();
             $table->string('nama_rekening')->nullable();
             $table->string('nomor_rekening')->nullable();
-            $table->string('status_siswa')->enum('Aktif', 'Non Aktif')->default('Aktif');
+            $table->string('status_siswa')->enum('Aktif', 'Non Aktif');
             $table->foreignId('riwayat_kelas')->constrained('kelas')->cascadeOnDelete()->cascadeOnUpdate();
             $table->softDeletes();
             $table->timestamps();

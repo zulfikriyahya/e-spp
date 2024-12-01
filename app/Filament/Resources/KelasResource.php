@@ -46,11 +46,24 @@ class KelasResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jurusan.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('jurusan.nama')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'Non Jurusan' => 'gray',
+                        'IPA' => 'primary',
+                        'IPS' => 'success',
+                    })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tingkat.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tingkat.nama')
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return match ($state) {
+                            'PAUD', 'TK' => 'gray',
+                            '1', '2', '3', '4', '5', '6' => 'danger',
+                            '7', '8', '9' => 'success',
+                            '10', '11', '12' => 'primary',
+                        };
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Dihapus')

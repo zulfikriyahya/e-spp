@@ -19,9 +19,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('role');
             $table->string('foto')->nullable();
-            // $table->foreignId('jenjang_id')->constrained('jenjangs')->cascadeOnDelete()->cascadeOnUpdate();
-            // $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete()->cascadeOnUpdate();
-            // $table->foreignId('siswa_id')->constrained('siswas')->cascadeOnDelete()->cascadeOnUpdate();
             $table->boolean('isActive');
             $table->rememberToken();
             $table->softDeletes();
