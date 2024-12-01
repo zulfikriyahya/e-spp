@@ -1,0 +1,25 @@
+models:
+  # Jenjang:
+  #   id: id
+  #   jenjang: string:20
+  # Jurusan:
+  #   id: id
+  #   jurusan: string:30
+  # Kelas:
+  #   id: id
+  #   kelas: string:20
+  #   jenjang_id: int foreign:jenjang.id
+  #   jurusan_id: int foreign:jurusan.id
+  # Siswa:
+  #   id: id
+  #   nama: string:50
+  #   nik: string:18
+  #   nisn: string:10
+  #   nis: string:25
+  #   agama: string:20
+  #   gender: string:10
+  #   goldar: string:3
+  #   tempat_lahir: string:30
+  #   tanggal_lahir: date
+  #   kelas_id: int foreign:kelas.id
+  #   alamat: text
