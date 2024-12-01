@@ -23,6 +23,11 @@ class NegaraResource extends Resource
     protected static ?int $sort = 0;
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah Negara';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() . ' Negara';
+    }
     public static function form(Form $form): Form
     {
         return $form

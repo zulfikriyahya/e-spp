@@ -23,6 +23,11 @@ class TahunPelajaranResource extends Resource
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah TP';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() . ' TP';
+    }
     public static function form(Form $form): Form
     {
         return $form

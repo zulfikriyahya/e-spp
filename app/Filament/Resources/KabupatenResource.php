@@ -23,6 +23,11 @@ class KabupatenResource extends Resource
     protected static ?int $sort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah Kabupaten';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() . ' Kabupaten';
+    }
     public static function form(Form $form): Form
     {
         return $form

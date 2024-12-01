@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+
 class KecamatanResource extends Resource
 {
     protected static ?string $model = Kecamatan::class;
@@ -23,6 +24,11 @@ class KecamatanResource extends Resource
     protected static ?int $sort = 3;
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah Kecamatan';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() . ' Kecamatan';
+    }
     public static function form(Form $form): Form
     {
         return $form

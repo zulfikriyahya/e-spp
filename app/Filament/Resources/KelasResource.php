@@ -25,6 +25,11 @@ class KelasResource extends Resource
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah Kelas';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() . ' Kelas';
+    }
     public static function form(Form $form): Form
     {
         return $form

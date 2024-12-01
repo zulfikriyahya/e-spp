@@ -23,6 +23,11 @@ class TingkatResource extends Resource
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static ?string $navigationBadgeTooltip = 'Jumlah Tingkat';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() . ' Tingkat';
+    }
     public static function form(Form $form): Form
     {
         return $form
