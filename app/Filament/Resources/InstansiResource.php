@@ -25,22 +25,46 @@ class InstansiResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nama')
+                    ->label('Nama Instansi')
                     ->required(),
-                Forms\Components\TextInput::make('npsn'),
-                Forms\Components\TextInput::make('nss'),
-                Forms\Components\TextInput::make('logo'),
-                Forms\Components\TextInput::make('alamat'),
-                Forms\Components\TextInput::make('website'),
+                Forms\Components\TextInput::make('npsn')
+                    ->label('Nomor Pokok Sekolah Nasional'),
+                Forms\Components\TextInput::make('nss')
+                    ->label('Nomor Statistik Sekolah'),
+                Forms\Components\FileUpload::make('logo')
+                    ->label('Logo Instansi')
+                    ->maxSize(1024)
+                    ->minSize(10)
+                    ->fetchFileInformation(false)
+                    ->directory('img/logo')
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        null,
+                        '1:1',
+                        '4:3',
+                        '3:4',
+                    ]),
+                Forms\Components\TextInput::make('alamat')
+                    ->label('Alamat'),
+                Forms\Components\TextInput::make('website')
+                    ->label('Website'),
                 Forms\Components\TextInput::make('email')
+                    ->label('Surel')
                     ->email(),
                 Forms\Components\TextInput::make('telepon')
-                    ->tel(),
-                Forms\Components\TextInput::make('nama_bank'),
-                Forms\Components\TextInput::make('nama_rekening'),
-                Forms\Components\TextInput::make('nomor_rekening'),
-                Forms\Components\TextInput::make('pimpinan_id')
+                    ->tel()
+                    ->label('Telepon'),
+                Forms\Components\TextInput::make('nama_bank')
+                    ->label('Nama Bank'),
+                Forms\Components\TextInput::make('nama_rekening')
+                    ->label('Nama Rekening'),
+                Forms\Components\TextInput::make('nomor_rekening')
+                    ->label('Nomor Rekening'),
+                Forms\Components\Select::make('pimpinan_id')
+                    ->label('Nama Pimpinan')
                     ->required()
-                    ->numeric(),
+                    ->relationship('pimpinans', 'nama'),
             ]);
     }
 
@@ -70,9 +94,7 @@ class InstansiResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nomor_rekening')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('pimpinan_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('pimpinans.nama'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

@@ -62,8 +62,8 @@ class PimpinanResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tahuns.nama')
+                    // ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
