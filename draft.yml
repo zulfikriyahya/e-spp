@@ -1,0 +1,186 @@
+models:
+  Siswa:
+    nama: string
+    nisn: string nullable
+    nis: string nullable
+    tempat_lahir: string nullable
+    tanggal_lahir: string nullable
+    jenis_kelamin: string nullable
+    alamat: string nullable
+    nama_ibu: string nullable
+    nama_ayah: string nullable
+    foto: string nullable
+    telepon_orangtua: string nullable
+    status: boolean
+    email: string
+    password: string
+    nama_bank: string nullable
+    nama_rekening: string nullable
+    nomor_rekening: string nullable
+    kelas_id: id foreign:kelas
+    riwayat_kelas: string
+    relationships:
+      belongsTo: Kelas
+      hasMany: Pembayaran
+
+  Kelas:
+    nama: string
+    jurusan_id: id foreign:jurusans
+    tingkat_id: id foreign:tingkats
+    relationships:
+      belongsTo: Jurusan, Tingkat
+    #   hasMany: referensiBawah
+
+  Jurusan:
+    nama: string
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Kelas
+
+  Tingkat:
+    nama: string
+    jenjang_id: id foreign:jenjangs
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Kelas
+
+  Jenjang:
+    nama: string
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Tingkat
+
+  Bulan:
+    nama: string
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Kredit, Debit, Pemasukkan, Pembayaran, Pengeluaran
+
+  Tahun:
+    nama: string
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Kredit, Debit, Pemasukkan, Pembayaran, Pengeluaran, Pimpinan
+
+  JenisPemasukkan:
+    nama: string
+    deskripsi: string nullable
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Pemasukkan
+
+  Pemasukkan:
+    nama: string
+    deskripsi: string nullable
+    nominal: integer
+    jenis_pemasukkan_id: id foreign:jenis_pemasukkans
+    bulan_id: id foreign:bulans
+    tahun_id: id foreign:tahuns
+    relationships:
+      belongsTo: JenisPemasukkan
+    #   hasMany: referensiBawah
+
+  JenisPembayaran:
+    nama: string
+    deskripsi: string nullable
+    nominal: integer
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Pembayaran
+
+  Pembayaran:
+    nama: string
+    deskripsi: string nullable
+    nominal: integer
+    kwitansi: string
+    siswa_id: id foreign:siswas
+    bulan_id: id foreign:bulans
+    tahun_id: id foreign:tahuns
+    jenis_pembayaran_id: id foreign:jenis_pembayarans
+    status: string
+    relationships:
+      belongsTo: Siswa, Bulan, Tahun, JenisPembayaran
+      hasMany: Debit
+
+  JenisPengeluaran:
+    nama: string
+    deskripsi: string nullable
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Pengeluaran
+
+  Pengeluaran:
+    nama: string
+    deskripsi: string nullable
+    nominal: integer
+    kwitansi: string
+    bulan_id: id foreign:bulans
+    tahun_id: id foreign:tahuns
+    jenis_pengeluaran_id: id foreign:jenis_pengeluarans
+    instansi_id: id foreign:instansis
+    relationships:
+      belongsTo: JenisPengeluaran, Instansi, Tahun, Bulan
+    #   hasMany: referensiBawah
+
+  Debit:
+    nama: string
+    deskripsi: string
+    bulan_id: id foreign:bulans
+    tahun_id: id foreign:tahuns
+    pemasukkan_id: id foreign:pemasukkans
+    pembayaran_id: id foreign:pembayarans
+    relationships:
+      belongsTo: Pemasukkan, Pembayaran, Bulan, Tahun
+    #   hasMany: referensiBawah
+
+  Kredit:
+    nama: string
+    deskripsi: string nullable
+    bulan_id: id foreign:bulans
+    tahun_id: id foreign:tahuns
+    pengeluaran_id: id foreign:pengeluarans
+    relationships:
+      belongsTo: Pengeluaran, Tahun, Bulan
+    #   hasMany: referensiBawah
+
+  Kas:
+    nama: string
+    deskripsi: string nullable
+    tahun_id: id foreign:tahuns
+    bulan_id: id foreign:bulans
+    kredit_id: id foreign:kredits
+    debit_id: id foreign:debits
+    relationships:
+      belongsTo: Kredit, Debit, Tahun, Bulan
+    #   hasMany: referensiBawah
+
+  Instansi:
+    nama: string
+    npsn: string nullable
+    nss: string nullable
+    logo: string nullable
+    alamat: string nullable
+    website: string nullable
+    email: string nullable
+    telepon: string nullable
+    nama_bank: string nullable
+    nama_rekening: string nullable
+    nomor_rekening: string nullable
+    pimpinan_id: id foreign:pimpinans
+    relationships:
+      belongsTo: Pimpinan
+    #   hasMany: referensiBawah
+
+  Pimpinan:
+    nama: string
+    nip: string nullable
+    nuptk: string nullable
+    foto: string nullable
+    tte: string nullable
+    status: boolean
+    email: string
+    password: string
+    tahun_id: id foreign:tahuns
+    relationships:
+      #   belongsTo: referensiAtas
+      hasMany: Instansi, Tahun

@@ -1,0 +1,74 @@
+created:
+    - database/factories/SiswaFactory.php
+    - database/factories/KelasFactory.php
+    - database/factories/JurusanFactory.php
+    - database/factories/TingkatFactory.php
+    - database/factories/JenjangFactory.php
+    - database/factories/BulanFactory.php
+    - database/factories/TahunFactory.php
+    - database/factories/JenisPemasukkanFactory.php
+    - database/factories/PemasukkanFactory.php
+    - database/factories/JenisPembayaranFactory.php
+    - database/factories/PembayaranFactory.php
+    - database/factories/JenisPengeluaranFactory.php
+    - database/factories/PengeluaranFactory.php
+    - database/factories/DebitFactory.php
+    - database/factories/KreditFactory.php
+    - database/factories/KasFactory.php
+    - database/factories/InstansiFactory.php
+    - database/factories/PimpinanFactory.php
+    - database/migrations/2024_12_08_051757_create_siswas_table.php
+    - database/migrations/2024_12_08_051758_create_kelas_table.php
+    - database/migrations/2024_12_08_051759_create_jurusans_table.php
+    - database/migrations/2024_12_08_051800_create_tingkats_table.php
+    - database/migrations/2024_12_08_051801_create_jenjangs_table.php
+    - database/migrations/2024_12_08_051802_create_bulans_table.php
+    - database/migrations/2024_12_08_051803_create_tahuns_table.php
+    - database/migrations/2024_12_08_051804_create_jenis_pemasukkans_table.php
+    - database/migrations/2024_12_08_051805_create_pemasukkans_table.php
+    - database/migrations/2024_12_08_051806_create_jenis_pembayarans_table.php
+    - database/migrations/2024_12_08_051807_create_pembayarans_table.php
+    - database/migrations/2024_12_08_051808_create_jenis_pengeluarans_table.php
+    - database/migrations/2024_12_08_051809_create_pengeluarans_table.php
+    - database/migrations/2024_12_08_051810_create_debits_table.php
+    - database/migrations/2024_12_08_051811_create_kredits_table.php
+    - database/migrations/2024_12_08_051812_create_kas_table.php
+    - database/migrations/2024_12_08_051813_create_instansis_table.php
+    - database/migrations/2024_12_08_051814_create_pimpinans_table.php
+    - app/Models/Siswa.php
+    - app/Models/Kelas.php
+    - app/Models/Jurusan.php
+    - app/Models/Tingkat.php
+    - app/Models/Jenjang.php
+    - app/Models/Bulan.php
+    - app/Models/Tahun.php
+    - app/Models/JenisPemasukkan.php
+    - app/Models/Pemasukkan.php
+    - app/Models/JenisPembayaran.php
+    - app/Models/Pembayaran.php
+    - app/Models/JenisPengeluaran.php
+    - app/Models/Pengeluaran.php
+    - app/Models/Debit.php
+    - app/Models/Kredit.php
+    - app/Models/Kas.php
+    - app/Models/Instansi.php
+    - app/Models/Pimpinan.php
+models:
+    Siswa: { nama: string, nisn: 'string nullable', nis: 'string nullable', tempat_lahir: 'string nullable', tanggal_lahir: 'string nullable', jenis_kelamin: 'string nullable', alamat: 'string nullable', nama_ibu: 'string nullable', nama_ayah: 'string nullable', foto: 'string nullable', telepon_orangtua: 'string nullable', status: boolean, email: string, password: string, nama_bank: 'string nullable', nama_rekening: 'string nullable', nomor_rekening: 'string nullable', kelas_id: 'id foreign:kelas', riwayat_kelas: string, relationships: { belongsTo: Kelas, hasMany: Pembayaran } }
+    Kelas: { nama: string, jurusan_id: 'id foreign:jurusans', tingkat_id: 'id foreign:tingkats', relationships: { belongsTo: 'Jurusan, Tingkat' } }
+    Jurusan: { nama: string, relationships: { hasMany: Kelas } }
+    Tingkat: { nama: string, jenjang_id: 'id foreign:jenjangs', relationships: { hasMany: Kelas } }
+    Jenjang: { nama: string, relationships: { hasMany: Tingkat } }
+    Bulan: { nama: string, relationships: { hasMany: 'Kredit, Debit, Pemasukkan, Pembayaran, Pengeluaran' } }
+    Tahun: { nama: string, relationships: { hasMany: 'Kredit, Debit, Pemasukkan, Pembayaran, Pengeluaran, Pimpinan' } }
+    JenisPemasukkan: { nama: string, deskripsi: 'string nullable', relationships: { hasMany: Pemasukkan } }
+    Pemasukkan: { nama: string, deskripsi: 'string nullable', nominal: integer, jenis_pemasukkan_id: 'id foreign:jenis_pemasukkans', bulan_id: 'id foreign:bulans', tahun_id: 'id foreign:tahuns', relationships: { belongsTo: JenisPemasukkan } }
+    JenisPembayaran: { nama: string, deskripsi: 'string nullable', nominal: integer, relationships: { hasMany: Pembayaran } }
+    Pembayaran: { nama: string, deskripsi: 'string nullable', nominal: integer, kwitansi: string, siswa_id: 'id foreign:siswas', bulan_id: 'id foreign:bulans', tahun_id: 'id foreign:tahuns', jenis_pembayaran_id: 'id foreign:jenis_pembayarans', status: string, relationships: { belongsTo: 'Siswa, Bulan, Tahun, JenisPembayaran', hasMany: Debit } }
+    JenisPengeluaran: { nama: string, deskripsi: 'string nullable', relationships: { hasMany: Pengeluaran } }
+    Pengeluaran: { nama: string, deskripsi: 'string nullable', nominal: integer, kwitansi: string, bulan_id: 'id foreign:bulans', tahun_id: 'id foreign:tahuns', jenis_pengeluaran_id: 'id foreign:jenis_pengeluarans', instansi_id: 'id foreign:instansis', relationships: { belongsTo: 'JenisPengeluaran, Instansi, Tahun, Bulan' } }
+    Debit: { nama: string, deskripsi: string, bulan_id: 'id foreign:bulans', tahun_id: 'id foreign:tahuns', pemasukkan_id: 'id foreign:pemasukkans', pembayaran_id: 'id foreign:pembayarans', relationships: { belongsTo: 'Pemasukkan, Pembayaran, Bulan, Tahun' } }
+    Kredit: { nama: string, deskripsi: 'string nullable', bulan_id: 'id foreign:bulans', tahun_id: 'id foreign:tahuns', pengeluaran_id: 'id foreign:pengeluarans', relationships: { belongsTo: 'Pengeluaran, Tahun, Bulan' } }
+    Kas: { nama: string, deskripsi: 'string nullable', tahun_id: 'id foreign:tahuns', bulan_id: 'id foreign:bulans', kredit_id: 'id foreign:kredits', debit_id: 'id foreign:debits', relationships: { belongsTo: 'Kredit, Debit, Tahun, Bulan' } }
+    Instansi: { nama: string, npsn: 'string nullable', nss: 'string nullable', logo: 'string nullable', alamat: 'string nullable', website: 'string nullable', email: 'string nullable', telepon: 'string nullable', nama_bank: 'string nullable', nama_rekening: 'string nullable', nomor_rekening: 'string nullable', pimpinan_id: 'id foreign:pimpinans', relationships: { belongsTo: Pimpinan } }
+    Pimpinan: { nama: string, nip: 'string nullable', nuptk: 'string nullable', foto: 'string nullable', tte: 'string nullable', status: boolean, email: string, password: string, tahun_id: 'id foreign:tahuns', relationships: { hasMany: 'Instansi, Tahun' } }
