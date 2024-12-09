@@ -24,6 +24,12 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Administrator',
             'email' => 'admin@admin.com',
+            'isAdmin' => true,
+        ]);
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@user.com',
+            'isAdmin' => false,
         ]);
         Bulan::create([
             'nama' => 'Januari',

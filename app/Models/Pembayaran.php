@@ -42,27 +42,27 @@ class Pembayaran extends Model
         'jenis_pembayaran_id' => 'integer',
     ];
 
-    public function siswas(): BelongsTo
+    public function siswa(): BelongsTo
     {
         return $this->belongsTo(Siswa::class);
     }
 
-    public function bulans(): BelongsTo
+    public function bulan(): BelongsTo
     {
         return $this->belongsTo(Bulan::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }
 
-    public function jenis_pembayarans(): BelongsTo
+    public function jenis_pembayaran(): BelongsTo
     {
         return $this->belongsTo(JenisPembayaran::class);
     }
 
-    public function debits(): HasMany
+    public function debit(): HasMany
     {
         return $this->hasMany(Debit::class);
     }

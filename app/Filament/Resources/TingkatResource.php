@@ -16,7 +16,7 @@ use App\Filament\Resources\TingkatResource\RelationManagers;
 class TingkatResource extends Resource
 {
     protected static ?string $model = Tingkat::class;
-    protected static ?string $navigationGroup = 'Rombel';
+    protected static ?string $navigationGroup = ('Rombel');
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,9 +26,9 @@ class TingkatResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nama')
                     ->required(),
-                Forms\Components\TextInput::make('jenjang_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('jenjang_id')
+                    ->relationship('jenjang', 'nama')
+                    ->required(),
             ]);
     }
 
@@ -38,8 +38,7 @@ class TingkatResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jenjang_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('jenjang.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -58,15 +57,21 @@ class TingkatResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

@@ -30,7 +30,7 @@ class JenisPengeluaran extends Model
         'id' => 'integer',
     ];
 
-    public function pengeluarans(): HasMany
+    public function pengeluaran(): HasMany
     {
         return $this->hasMany(Pengeluaran::class);
     }

@@ -49,12 +49,12 @@ class Pimpinan extends Model
         'tahun_id' => 'integer',
     ];
 
-    public function instansis(): HasMany
+    public function instansi(): HasMany
     {
         return $this->hasMany(Instansi::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }

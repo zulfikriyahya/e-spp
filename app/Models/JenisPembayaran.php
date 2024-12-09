@@ -31,7 +31,7 @@ class JenisPembayaran extends Model
         'id' => 'integer',
     ];
 
-    public function pembayarans(): HasMany
+    public function pembayaran(): HasMany
     {
         return $this->hasMany(Pembayaran::class);
     }

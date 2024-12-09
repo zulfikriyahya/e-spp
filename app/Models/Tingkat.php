@@ -37,7 +37,7 @@ class Tingkat extends Model
         return $this->hasMany(Kelas::class);
     }
 
-    public function jenjangs(): BelongsTo
+    public function jenjang(): BelongsTo
     {
         return $this->belongsTo(Jenjang::class);
     }

@@ -7,8 +7,11 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use App\Models\Pembayaran;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Filament\Resources\Resource;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PembayaranResource\Pages;
 use App\Filament\Resources\PembayaranResource\RelationManagers;
@@ -16,7 +19,7 @@ use App\Filament\Resources\PembayaranResource\RelationManagers;
 class PembayaranResource extends Resource
 {
     protected static ?string $model = Pembayaran::class;
-    protected static ?string $navigationGroup = 'Pembayaran';
+    protected static ?string $navigationGroup = ('Pembayaran');
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -29,22 +32,33 @@ class PembayaranResource extends Resource
                 Forms\Components\TextInput::make('deskripsi'),
                 Forms\Components\TextInput::make('nominal')
                     ->required()
+                    ->prefix('Rp. ')
                     ->numeric(),
-                Forms\Components\TextInput::make('kwitansi')
+                Forms\Components\FileUpload::make('kwitansi')
+                    ->image()
+                    ->imageEditor()
+                    ->maxSize(200)
+                    ->minSize(10)
+                    ->storeFileNamesIn('attachment_file_names')
+                    ->directory('img/kwitansi/')
                     ->required(),
-                Forms\Components\TextInput::make('siswa_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('bulan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('tahun_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('jenis_pembayaran_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('siswa_id')
+                    ->relationship('siswa', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('bulan_id')
+                    ->relationship('bulan', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('tahun_id')
+                    ->relationship('tahun', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('jenis_pembayaran_id')
+                    ->relationship('jenis_pembayaran', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'lunas' => 'Lunas',
+                        'terhutang' => 'Terhutang',
+                    ])
                     ->required(),
             ]);
     }
@@ -59,22 +73,24 @@ class PembayaranResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nominal')
                     ->numeric()
+                    ->prefix('Rp. ')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('kwitansi')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('siswa_id')
-                    ->numeric()
+                Tables\Columns\ImageColumn::make('kwitansi')
+                    ->label('Bukti Pembayaran'),
+                Tables\Columns\TextColumn::make('siswa.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('bulan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('bulan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tahun_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tahun.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jenis_pembayaran_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('jenis_pembayaran.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'lunas' => 'success',
+                        'terhutang' => 'danger',
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -90,18 +106,28 @@ class PembayaranResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make()
+                // SelectFilter::make([
+                //     'lunas' => 'Lunas',
+                //     'terhutang' => 'Terhutang',
+                // ])
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

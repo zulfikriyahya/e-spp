@@ -33,12 +33,12 @@ class Kelas extends Model
         'tingkat_id' => 'integer',
     ];
 
-    public function jurusans(): BelongsTo
+    public function jurusan(): BelongsTo
     {
         return $this->belongsTo(Jurusan::class);
     }
 
-    public function tingkats(): BelongsTo
+    public function tingkat(): BelongsTo
     {
         return $this->belongsTo(Tingkat::class);
     }

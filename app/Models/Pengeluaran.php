@@ -40,22 +40,22 @@ class Pengeluaran extends Model
         'instansi_id' => 'integer',
     ];
 
-    public function jenis_pengeluarans(): BelongsTo
+    public function jenis_pengeluaran(): BelongsTo
     {
         return $this->belongsTo(JenisPengeluaran::class);
     }
 
-    public function instansis(): BelongsTo
+    public function instansi(): BelongsTo
     {
         return $this->belongsTo(Instansi::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }
 
-    public function bulans(): BelongsTo
+    public function bulan(): BelongsTo
     {
         return $this->belongsTo(Bulan::class);
     }

@@ -16,7 +16,7 @@ use App\Filament\Resources\KelasResource\RelationManagers;
 class KelasResource extends Resource
 {
     protected static ?string $model = Kelas::class;
-    protected static ?string $navigationGroup = 'Rombel';
+    protected static ?string $navigationGroup = ('Rombel');
     protected static ?int $sort = 3;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,12 +26,12 @@ class KelasResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nama')
                     ->required(),
-                Forms\Components\TextInput::make('jurusan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('tingkat_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('jurusan_id')
+                    ->relationship('jurusan', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('tingkat_id')
+                    ->relationship('tingkat', 'nama')
+                    ->required(),
             ]);
     }
 
@@ -41,11 +41,9 @@ class KelasResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jurusan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('jurusan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tingkat_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tingkat.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -64,15 +62,21 @@ class KelasResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

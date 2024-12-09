@@ -16,7 +16,7 @@ use App\Filament\Resources\KasResource\RelationManagers;
 class KasResource extends Resource
 {
     protected static ?string $model = Kas::class;
-    protected static ?string $navigationGroup = 'Jurnal';
+    protected static ?string $navigationGroup = ('Jurnal');
     protected static ?int $sort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,18 +27,18 @@ class KasResource extends Resource
                 Forms\Components\TextInput::make('nama')
                     ->required(),
                 Forms\Components\TextInput::make('deskripsi'),
-                Forms\Components\TextInput::make('bulan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('tahun_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('kredit_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('debit_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('bulan_id')
+                    ->relationship('bulan', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('tahun_id')
+                    ->relationship('tahun', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('kredit_id')
+                    ->relationship('kredit', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('debit_id')
+                    ->relationship('debit', 'nama')
+                    ->required(),
             ]);
     }
 
@@ -50,17 +50,13 @@ class KasResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('deskripsi')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bulan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('bulan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tahun_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tahun.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('kredit_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('kredit.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('debit_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('debit.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -79,15 +75,21 @@ class KasResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

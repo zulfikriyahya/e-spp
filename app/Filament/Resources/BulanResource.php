@@ -16,7 +16,7 @@ use App\Filament\Resources\BulanResource\RelationManagers;
 class BulanResource extends Resource
 {
     protected static ?string $model = Bulan::class;
-    protected static ?string $navigationGroup = 'Periode';
+    protected static ?string $navigationGroup = ('Periode');
     protected static ?int $sort = 0;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -52,15 +52,21 @@ class BulanResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

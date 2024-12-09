@@ -29,7 +29,7 @@ class Jenjang extends Model
         'id' => 'integer',
     ];
 
-    public function tingkats(): HasMany
+    public function tingkat(): HasMany
     {
         return $this->hasMany(Tingkat::class);
     }

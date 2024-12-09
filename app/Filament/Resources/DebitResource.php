@@ -16,7 +16,7 @@ use App\Filament\Resources\DebitResource\RelationManagers;
 class DebitResource extends Resource
 {
     protected static ?string $model = Debit::class;
-    protected static ?string $navigationGroup = 'Jurnal';
+    protected static ?string $navigationGroup = ('Jurnal');
     protected static ?int $sort = 0;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,18 +27,18 @@ class DebitResource extends Resource
                 Forms\Components\TextInput::make('nama')
                     ->required(),
                 Forms\Components\TextInput::make('deskripsi'),
-                Forms\Components\TextInput::make('bulan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('tahun_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('pemasukkan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('pembayaran_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('bulan_id')
+                    ->relationship('bulan', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('tahun_id')
+                    ->relationship('tahun', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('pemasukkan_id')
+                    ->relationship('pemasukkan', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('pembayaran_id')
+                    ->relationship('pembayaran', 'nama')
+                    ->required(),
             ]);
     }
 
@@ -50,17 +50,13 @@ class DebitResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('deskripsi')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bulan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('bulan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tahun_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tahun.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('pemasukkan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('pemasukkan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('pembayaran_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('pembayaran.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -79,15 +75,21 @@ class DebitResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

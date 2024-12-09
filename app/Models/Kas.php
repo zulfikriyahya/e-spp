@@ -38,22 +38,22 @@ class Kas extends Model
         'debit_id' => 'integer',
     ];
 
-    public function kredits(): BelongsTo
+    public function kredit(): BelongsTo
     {
         return $this->belongsTo(Kredit::class);
     }
 
-    public function debits(): BelongsTo
+    public function debit(): BelongsTo
     {
         return $this->belongsTo(Debit::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }
 
-    public function bulans(): BelongsTo
+    public function bulan(): BelongsTo
     {
         return $this->belongsTo(Bulan::class);
     }

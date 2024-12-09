@@ -37,17 +37,17 @@ class Pemasukkan extends Model
         'tahun_id' => 'integer',
     ];
 
-    public function jenis_pemasukkans(): BelongsTo
+    public function jenis_pemasukkan(): BelongsTo
     {
         return $this->belongsTo(JenisPemasukkan::class);
     }
 
-    public function bulans(): BelongsTo
+    public function bulan(): BelongsTo
     {
         return $this->belongsTo(Bulan::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }

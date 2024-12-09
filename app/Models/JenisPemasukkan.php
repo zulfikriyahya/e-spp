@@ -30,7 +30,7 @@ class JenisPemasukkan extends Model
         'id' => 'integer',
     ];
 
-    public function pemasukkans(): HasMany
+    public function pemasukkan(): HasMany
     {
         return $this->hasMany(Pemasukkan::class);
     }

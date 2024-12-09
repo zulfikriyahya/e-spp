@@ -16,7 +16,7 @@ use App\Filament\Resources\JurusanResource\RelationManagers;
 class JurusanResource extends Resource
 {
     protected static ?string $model = Jurusan::class;
-    protected static ?string $navigationGroup = 'Rombel';
+    protected static ?string $navigationGroup = ('Rombel');
     protected static ?int $sort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -52,15 +52,21 @@ class JurusanResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

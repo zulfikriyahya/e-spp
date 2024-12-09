@@ -29,27 +29,27 @@ class Bulan extends Model
         'id' => 'integer',
     ];
 
-    public function kredits(): HasMany
+    public function kredit(): HasMany
     {
         return $this->hasMany(Kredit::class);
     }
 
-    public function debits(): HasMany
+    public function debit(): HasMany
     {
         return $this->hasMany(Debit::class);
     }
 
-    public function pemasukkans(): HasMany
+    public function pemasukkan(): HasMany
     {
         return $this->hasMany(Pemasukkan::class);
     }
 
-    public function pembayarans(): HasMany
+    public function pembayaran(): HasMany
     {
         return $this->hasMany(Pembayaran::class);
     }
 
-    public function pengeluarans(): HasMany
+    public function pengeluaran(): HasMany
     {
         return $this->hasMany(Pengeluaran::class);
     }

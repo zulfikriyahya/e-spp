@@ -16,7 +16,7 @@ use App\Filament\Resources\PengeluaranResource\RelationManagers;
 class PengeluaranResource extends Resource
 {
     protected static ?string $model = Pengeluaran::class;
-    protected static ?string $navigationGroup = 'Pengeluaran';
+    protected static ?string $navigationGroup = ('Pengeluaran');
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -29,21 +29,32 @@ class PengeluaranResource extends Resource
                 Forms\Components\TextInput::make('deskripsi'),
                 Forms\Components\TextInput::make('nominal')
                     ->required()
+                    ->prefix('Rp. ')
                     ->numeric(),
-                Forms\Components\TextInput::make('kwitansi')
+                Forms\Components\FileUpload::make('kwitansi')
+                    ->image()
+                    ->imageEditor()
+                    ->maxSize(300)
+                    ->minSize(10)
+                    ->storeFileNamesIn('attachment_file_names')
+                    ->directory('img/kwitansi/')
                     ->required(),
-                Forms\Components\TextInput::make('bulan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('tahun_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('jenis_pengeluaran_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('instansi_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('bulan_id')
+                    ->relationship('bulan', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('tahun_id')
+                    ->relationship('tahun', 'nama')
+                    ->required(),
+                Forms\Components\Select::make('jenis_pengeluaran_id')
+                    ->relationship('jenis_pengeluaran', 'nama')
+                    ->required(),
+                Forms\Components\DateTimePicker::make('created_at')
+                    ->default(now())
+                    ->dehydrated()
+                    ->required(),
+                Forms\Components\Select::make('instansi_id')
+                    ->relationship('instansi', 'nama')
+                    ->required(),
             ]);
     }
 
@@ -60,18 +71,18 @@ class PengeluaranResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kwitansi')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('bulan_id')
+                Tables\Columns\TextColumn::make('bulan.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tahun_id')
+                Tables\Columns\TextColumn::make('tahun.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jenis_pengeluaran_id')
+                Tables\Columns\TextColumn::make('jenis_pengeluaran.nama')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('instansi_id')
-                    ->numeric()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('instansi.nama')
+                //     ->numeric()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -79,7 +90,7 @@ class PengeluaranResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -89,15 +100,21 @@ class PengeluaranResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

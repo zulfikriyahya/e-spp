@@ -16,8 +16,7 @@ use App\Filament\Resources\PimpinanResource\RelationManagers;
 class PimpinanResource extends Resource
 {
     protected static ?string $model = Pimpinan::class;
-    protected static ?string $navigationGroup = 'Administrasi';
-    protected static ?int $sort = 0;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -38,9 +37,9 @@ class PimpinanResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required(),
-                Forms\Components\TextInput::make('tahun_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('tahun_id')
+                    ->relationship('tahun', 'nama')
+                    ->required(),
             ]);
     }
 
@@ -62,8 +61,8 @@ class PimpinanResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahuns.nama')
-                    // ->numeric()
+                Tables\Columns\TextColumn::make('tahun.nama')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -82,15 +81,21 @@ class PimpinanResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

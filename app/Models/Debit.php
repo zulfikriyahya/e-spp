@@ -38,22 +38,22 @@ class Debit extends Model
         'pembayaran_id' => 'integer',
     ];
 
-    public function pemasukkans(): BelongsTo
+    public function pemasukkan(): BelongsTo
     {
         return $this->belongsTo(Pemasukkan::class);
     }
 
-    public function pembayarans(): BelongsTo
+    public function pembayaran(): BelongsTo
     {
         return $this->belongsTo(Pembayaran::class);
     }
 
-    public function bulans(): BelongsTo
+    public function bulan(): BelongsTo
     {
         return $this->belongsTo(Bulan::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }

@@ -41,7 +41,7 @@ class Instansi extends Model
         'pimpinan_id' => 'integer',
     ];
 
-    public function pimpinans(): BelongsTo
+    public function pimpinan(): BelongsTo
     {
         return $this->belongsTo(Pimpinan::class);
     }

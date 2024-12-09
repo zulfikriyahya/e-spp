@@ -16,7 +16,7 @@ use App\Filament\Resources\PemasukkanResource\RelationManagers;
 class PemasukkanResource extends Resource
 {
     protected static ?string $model = Pemasukkan::class;
-    protected static ?string $navigationGroup = 'Pemasukkan';
+    protected static ?string $navigationGroup = ('Pemasukkan');
     protected static ?int $sort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -30,14 +30,14 @@ class PemasukkanResource extends Resource
                 Forms\Components\TextInput::make('nominal')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('jenis_pemasukkan_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('jenis_pemasukkan_id')
+                    ->relationship('jenis_pemasukkan', 'nama')
+                    ->required(),
                 Forms\Components\Select::make('bulan_id')
-                    ->relationship('bulan', 'id')
+                    ->relationship('bulan', 'nama')
                     ->required(),
                 Forms\Components\Select::make('tahun_id')
-                    ->relationship('tahun', 'id')
+                    ->relationship('tahun', 'nama')
                     ->required(),
             ]);
     }
@@ -53,14 +53,11 @@ class PemasukkanResource extends Resource
                 Tables\Columns\TextColumn::make('nominal')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jenis_pemasukkan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('jenis_pemasukkan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('bulan.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('bulan.nama')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tahun.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('tahun.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -79,15 +76,21 @@ class PemasukkanResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

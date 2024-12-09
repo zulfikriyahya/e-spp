@@ -16,7 +16,7 @@ use App\Filament\Resources\JenisPembayaranResource\RelationManagers;
 class JenisPembayaranResource extends Resource
 {
     protected static ?string $model = JenisPembayaran::class;
-    protected static ?string $navigationGroup = 'Pembayaran';
+    protected static ?string $navigationGroup = ('Pembayaran');
     protected static ?int $sort = 0;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -61,15 +61,21 @@ class JenisPembayaranResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(auth()->user()->isAdmin),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                ])
+                    ->visible(auth()->user()->isAdmin),
             ]);
     }
 

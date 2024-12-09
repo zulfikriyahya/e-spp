@@ -36,17 +36,17 @@ class Kredit extends Model
         'pengeluaran_id' => 'integer',
     ];
 
-    public function pengeluarans(): BelongsTo
+    public function pengeluaran(): BelongsTo
     {
         return $this->belongsTo(Pengeluaran::class);
     }
 
-    public function tahuns(): BelongsTo
+    public function tahun(): BelongsTo
     {
         return $this->belongsTo(Tahun::class);
     }
 
-    public function bulans(): BelongsTo
+    public function bulan(): BelongsTo
     {
         return $this->belongsTo(Bulan::class);
     }
